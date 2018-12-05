@@ -73,7 +73,7 @@ reactParts input =
 
 hasOppositePolarity : Unit -> Unit -> Bool
 hasOppositePolarity a b =
-    (Char.isUpper a /= Char.isUpper b) && (Char.toUpper a == Char.toUpper b)
+    (a /= b) && (Char.toUpper a == Char.toUpper b)
 
 
 parse : String -> Polymer
