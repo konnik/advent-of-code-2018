@@ -1,8 +1,8 @@
-module Day5 exposing (..)
+module Day5 exposing (part1, part2)
 
 import Dict exposing (Dict)
 import List.Extra as LE
-import Util
+import Util exposing (minimum)
 
 
 type alias Unit =
@@ -14,19 +14,20 @@ type alias Polymer =
 
 
 part1 =
-    parse puzzleInput
-        |> reactPolymer
+    puzzleInput
+        |> parse
+        |> react
         |> length
 
 
 part2 =
     let
-        polymer =
+        originalPolymer =
             parse puzzleInput
     in
-    allUnitTypes
-        |> List.map (length << reactPolymer << removeUnitFromPolymer polymer)
-        |> Util.minimum
+    unitTypes
+        |> List.map (modify originalPolymer >> react >> length)
+        |> minimum
 
 
 length : Polymer -> Int
@@ -34,40 +35,40 @@ length =
     List.length
 
 
-allUnitTypes : List Unit
-allUnitTypes =
+unitTypes : List Unit
+unitTypes =
     String.toList "abcdefghijklmnopqrstuvwxyz"
 
 
-removeUnitFromPolymer : Polymer -> Unit -> Polymer
-removeUnitFromPolymer polymer ch =
+modify : Polymer -> Unit -> Polymer
+modify polymer ch =
     List.filter (\x -> Char.toLower x /= ch) polymer
 
 
-reactPolymer : Polymer -> Polymer
-reactPolymer polymer =
+react : Polymer -> Polymer
+react polymer =
     let
         ( left, _ ) =
-            react ( [], polymer )
+            reactParts ( [], polymer )
     in
     List.reverse left
 
 
-react : ( List Char, List Char ) -> ( List Char, List Char )
-react input =
+reactParts : ( List Char, List Char ) -> ( List Char, List Char )
+reactParts input =
     case input of
         ( left, [] ) ->
             ( left, [] )
 
         ( l :: ls, r :: rs ) ->
             if hasOppositePolarity l r then
-                react ( ls, rs )
+                reactParts ( ls, rs )
 
             else
-                react ( r :: l :: ls, rs )
+                reactParts ( r :: l :: ls, rs )
 
         ( [], r :: rs ) ->
-            react ( [ r ], rs )
+            reactParts ( [ r ], rs )
 
 
 hasOppositePolarity : Char -> Char -> Bool
