@@ -54,7 +54,7 @@ react polymer =
     List.reverse left
 
 
-reactParts : ( List Char, List Char ) -> ( List Char, List Char )
+reactParts : ( Polymer, Polymer ) -> ( Polymer, Polymer )
 reactParts input =
     case input of
         ( left, [] ) ->
@@ -71,7 +71,7 @@ reactParts input =
             reactParts ( [ r ], rs )
 
 
-hasOppositePolarity : Char -> Char -> Bool
+hasOppositePolarity : Unit -> Unit -> Bool
 hasOppositePolarity a b =
     (Char.isUpper a /= Char.isUpper b) && (Char.toUpper a == Char.toUpper b)
 
